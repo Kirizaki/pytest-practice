@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from fastapi import FastAPI
+from fastapi import HTTPException
 
 app = FastAPI()
 
@@ -20,4 +21,12 @@ def upload(content: str):
     }
 
     return { "id": file_id }
+
+
+@app.get("/download/{file_id}")
+def download(file_id: str):
+    if file_id not in files:
+        raise HTTPException(status_code=404, detail="File not found")
+    
+    return files[file_id]
 
