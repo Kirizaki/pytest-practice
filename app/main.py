@@ -31,7 +31,7 @@ def download(file_id: str):
     return files[file_id]
 
 
-@app.delete("file/{file_id}")
+@app.delete("/file/{file_id}")
 def delete(file_id: str):
     if file_id not in files:
         raise HTTPException(status_code=404, detail="File not found")
