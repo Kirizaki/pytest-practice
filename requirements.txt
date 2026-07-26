@@ -1,0 +1,5 @@
+# TODO: specific versions, to actually control test env!
+fastapi
+uvicorn
+pytest
+requests
