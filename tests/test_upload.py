@@ -1,3 +1,6 @@
+import pytest
+
+
 def test_upload_returns_id(client):
     # arrange: create test data
     payload = {
@@ -35,4 +38,27 @@ def test_download_uploaded_file(client):
     # assert
     assert response.status_code == 200
     assert response.json()["content"] == test_content
+
+
+@pytest.mark.parametrize(
+        "content",
+        [
+            "",
+            " ",
+            "a",
+            "ジェシアー",
+            "🐟",
+        ]
+)
+
+
+def test_upload_accepts_different_content(client, content):
+    response = client.post(
+        "/upload",
+        params={
+            "content": content
+        }
+    )
+    assert response.status_code == 200
+    assert "id" in response.json()
 
