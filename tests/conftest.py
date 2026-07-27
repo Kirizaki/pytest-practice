@@ -7,8 +7,5 @@ import pytest
 
 @pytest.fixture
 def client():
-    return TestClient(
-        app,
-        raise_server_exceptions=False
-    )
+    return TestClient(app, raise_server_exceptions=False)
 
