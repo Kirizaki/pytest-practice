@@ -1,12 +1,28 @@
 from uuid import uuid4
 
-from fastapi import FastAPI
-from fastapi import HTTPException
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 
 from app.storage import Storage
 
 app = FastAPI()
 storage = Storage()
+
+
+@app.exception_handler(KeyError)
+async def key_error_handler(request: Request, exc: KeyError):
+    return JSONResponse(
+        status_code=404,
+        content={"detail":"File not found"}
+    )
+
+
+@app.exception_handler(Exception)
+async def exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={"detail":"Storage error"}
+    )
 
 
 @app.get("/health")
@@ -22,26 +38,13 @@ def upload(content: str):
     return { "id": file_id }
 
 
-def raise_file_not_found():
-    raise HTTPException(status_code=404, detail="File not found")
-
-
 @app.get("/download/{file_id}")
 def download(file_id: str):
-    file = storage.get(file_id)
-    if file is None:
-        raise_file_not_found()
-    
-    return { "content": file}
+    return { "content": storage.get(file_id) }
 
 
 @app.delete("/file/{file_id}")
 def delete(file_id: str):
-    file = storage.get(file_id)
-    if file is None:
-        raise_file_not_found()
-    
     storage.delete(file_id)
-
     return {"deleted": True}
 

@@ -6,7 +6,7 @@ class Storage:
         self.files[file_id] = content
 
     def get(self, file_id):
-        return self.files.get(file_id, None)
+        return self.files[file_id]
 
     def delete(self, file_id):
         del self.files[file_id]
