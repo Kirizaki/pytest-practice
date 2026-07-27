@@ -3,4 +3,7 @@ fastapi
 uvicorn
 pytest
 pytest-mock
+pytest-cov
 requests
+ruff
+httpx2
