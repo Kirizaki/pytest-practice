@@ -1,3 +1,4 @@
+import os
 from uuid import uuid4
 
 from fastapi import FastAPI, Request
@@ -7,7 +8,10 @@ from app.storage import Storage
 
 app = FastAPI()
 storage = Storage()
-
+ENVIRONMENT = os.getenv(
+    "ENVIRONMENT",
+    "local"
+)
 
 @app.exception_handler(KeyError)
 async def key_error_handler(request: Request, exc: KeyError):
@@ -27,7 +31,10 @@ async def exception_handler(request: Request, exc: Exception):
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "environment": ENVIRONMENT
+        }
 
 @app.post("/upload")
 def upload(content: str):
